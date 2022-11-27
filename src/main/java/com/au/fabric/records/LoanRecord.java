@@ -11,9 +11,9 @@ public class LoanRecord {
     private float rateOfInterest;
     private float totalRepayments;
     private float emi;
-    private int numberOfRepayments;
-    private ArrayList<LoanRepaymentTerm> repaymentTerms;
-    private HashMap<Integer, Float> bulkRepayments;
+    private final int numberOfRepayments;
+    private final ArrayList<LoanRepaymentTerm> repaymentTerms;
+    private final HashMap<Integer, Float> bulkRepayments;
 
     @Override
     public boolean equals(Object o) {
@@ -84,9 +84,8 @@ public class LoanRecord {
         return bulkRepayments;
     }
 
-    public Map<Integer, Float> addBulkRepayment(int instalmentNumber, float repayment){
+    public void addBulkRepayment(int instalmentNumber, float repayment){
         bulkRepayments.put(instalmentNumber, repayment);
-        return bulkRepayments;
     }
 
     public List<LoanRepaymentTerm> getRepaymentTerms() {
@@ -114,11 +113,16 @@ public class LoanRecord {
     public void calculateRepayments(){
         repaymentTerms.clear();
         float balance = totalRepayments;
-        int installmentNumber = 1;
+        int installmentNumber = 0;
         while(balance > 0){
             LoanRepaymentTerm term = new LoanRepaymentTerm(installmentNumber);
-            LoanRepayment repayment = new LoanRepayment(installmentNumber, false, balance, emi);
-            term.addRepayment(repayment);
+            if(installmentNumber > 0){
+                LoanRepayment repayment = new LoanRepayment(installmentNumber, false, balance, emi);
+                term.addRepayment(repayment);
+            }else{
+                LoanRepayment repayment = new LoanRepayment(installmentNumber, false, balance, 0);
+                term.addRepayment(repayment);
+            }
             if(bulkRepayments.containsKey(installmentNumber)){
                 float currentBulkRepayments = bulkRepayments.get(installmentNumber);
                 LoanRepayment bulkRepayment = new LoanRepayment(installmentNumber, true, term.getBalanceAfter(), currentBulkRepayments);

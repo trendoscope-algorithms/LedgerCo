@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class BalanceCommand implements Command {
-    private String bankName;
-    private String borrowerName;
-    private int emiNumber;
+    private final String bankName;
+    private final String borrowerName;
+    private final int emiNumber;
 
     public BalanceCommand(String bankName, String borrowerName, int emiNumber) {
         this.bankName = bankName;
@@ -43,14 +43,10 @@ public class BalanceCommand implements Command {
         String key = this.bankName+":"+this.borrowerName;
         LoanRecord currentRecord = loanRecordsMap.get(key);
         List<LoanRepaymentTerm> repaymentTermList = currentRecord.getRepaymentTerms();
-        int repaymentsMade = 0;
-        int remainingRepayments = currentRecord.getNumberOfRepayments();
-        if(this.emiNumber>0){
-            LoanRepaymentTerm repaymentTerm = repaymentTermList.get(this.emiNumber-1);
-            float balanceAfter = repaymentTerm.getBalanceAfter();
-            repaymentsMade = (int) (currentRecord.getTotalRepayments() - balanceAfter);
-            remainingRepayments = (int) Math.ceil(balanceAfter/currentRecord.getEmi());
-        }
+        LoanRepaymentTerm repaymentTerm = repaymentTermList.get(this.emiNumber);
+        float balanceAfter = repaymentTerm.getBalanceAfter();
+        int repaymentsMade = (int) (currentRecord.getTotalRepayments() - balanceAfter);
+        int remainingRepayments = (int) Math.ceil(balanceAfter/currentRecord.getEmi());
         System.out.println(this.bankName + " "+this.borrowerName + " "+repaymentsMade + " "+remainingRepayments);
     }
 }

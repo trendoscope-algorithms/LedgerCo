@@ -129,7 +129,7 @@ class LoanRecordTest {
     void testCalculateRepayments() {
         loanRecord.calculateRepayments();
         assertNotNull(loanRecord.getRepaymentTerms());
-        assertEquals(loanRecord.getRepaymentTerms().size(), loanRecord.getNumberOfRepayments());
+        assertEquals(loanRecord.getRepaymentTerms().size(), loanRecord.getNumberOfRepayments()+1);
         int lastIndex = loanRecord.getRepaymentTerms().size()-1;
         assertEquals(loanRecord.getRepaymentTerms().get(lastIndex).getBalanceAfter(), 0);
         assertEquals(loanRecord.getRepaymentTerms().get(lastIndex).getInstalmentNumber(), loanRecord.getNumberOfRepayments());
@@ -140,7 +140,7 @@ class LoanRecordTest {
         loanRecord.addBulkRepayment(40, 1000);
         loanRecord.calculateRepayments();
         assertNotNull(loanRecord.getRepaymentTerms());
-        assertEquals(loanRecord.getRepaymentTerms().size(), 56);
+        assertEquals(loanRecord.getRepaymentTerms().size(), 57);
         int lastIndex = loanRecord.getRepaymentTerms().size()-1;
         assertEquals(loanRecord.getRepaymentTerms().get(lastIndex).getBalanceAfter(), 0);
         assertEquals(loanRecord.getRepaymentTerms().get(lastIndex).getInstalmentNumber(), 56);
